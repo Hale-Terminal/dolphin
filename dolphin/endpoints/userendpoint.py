@@ -21,3 +21,9 @@ class UserEndpoint:
 
     def on_get(self, req: Request, resp: Response):
         pass
+
+    def on_get_user(self, req: Request, resp: Response, user: int):
+        with self.uowm.start() as uow:
+            user = uow.users.find_by_id(user)
+            result = user.to_dict()
+        resp.body = json.dumps(result)
