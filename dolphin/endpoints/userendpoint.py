@@ -8,11 +8,8 @@ from dolphin.core.db.uow.unitofworkmanager import UnitOfWorkManager
 
 
 class UserServe:
-    def __init__(self, uowm: UnitOfWorkManager):
-        self.uowm = uowm
-
-    def on_get(self, req: Request, resp: Response, id):
-        with self.uowm.start() as uow:
+    def on_get(self, req: Request, resp: Response, id, uowm):
+        with uowm.start() as uow:
             user = uow.users.find_by_id(id)
             result = user.to_dict()
         resp.body = json.dumps(result)
