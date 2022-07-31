@@ -15,6 +15,6 @@ cors = CORS(allow_origins_list=['http://localhost:8888'], allow_all_methods=True
 api = application = falcon.API(middleware=[cors.middleware, MultipartMiddleware()])
 api.req_options.auto_parse_form_urlencoded = True
 
-api.add_route('/v0/user/{user}', UserEndpoint(uowm))
+api.add_route('/v0/user/{user}', UserEndpoint(uowm), suffix='user')
 
 #serve(api, host='localhost', port=8888, threads=15)

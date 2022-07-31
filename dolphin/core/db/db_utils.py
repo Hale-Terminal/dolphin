@@ -5,8 +5,8 @@ from sqlalchemy.engine.url import URL
 def get_db_engine():
     connection_uri = URL.create(
         "mysql+pymysql",
-        username="dev",
-        password="dolphin",
+        username="dolphin-dev",
+        password="dolphin-dev",
         host="18.117.149.47",
         database="dolphin"
     )
