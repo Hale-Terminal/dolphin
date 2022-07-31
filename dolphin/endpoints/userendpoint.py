@@ -27,3 +27,12 @@ class UserEndpoint:
             user = uow.users.find_by_id(user)
             result = user.to_dict()
         resp.body = json.dumps(result)
+
+    def on_get_login(self, req: Request, resp: Response):
+        username = req.get_header('username', required=True)
+        password = req.get_header('password', required=True)
+        if username == "ADMIN" and password == "password":
+            response = {
+                "token": "WTG435eoigier5"
+            }
+            resp.body = json.dumps(response)
