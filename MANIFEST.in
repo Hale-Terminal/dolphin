@@ -1,0 +1,4 @@
+include setup.py README.md MANIFEST.in
+recursive-include ./ requirements*.txt
+graft src/dolphin
+global-exclude *~

@@ -1,0 +1,10 @@
+black
+click
+coverage
+devtools
+factory-boy
+faker
+flake8
+ipython
+pytest
+vulture

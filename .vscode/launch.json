@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Server Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/run.py"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Front End Debug",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/src/dolphin/static/dolphin"
+        }
+    ]
+}
