@@ -22,3 +22,4 @@ pymysql
 influxdb
 python-logging-loki
 psutil
+ip2geotools
