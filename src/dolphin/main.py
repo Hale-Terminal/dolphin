@@ -94,7 +94,8 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         method = request.method
         client_ip = request.client.host
 
-        client_event(client_ip)
+        if path_template != "api.v1.healthcheck":
+            client_event(client_ip)
 
         try:
             start = time.perf_counter()
