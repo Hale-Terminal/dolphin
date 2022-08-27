@@ -17,9 +17,9 @@ def get_ram():
     return ram_usage
 
 
-def check_status():
+def check_status(ip_address):
     try:
-        r = requests.get("http://127.0.0.1:8000/api/v1/healthcheck")
+        r = requests.get(f"http://{ip_address}/api/v1/healthcheck")
         if r.status_code == 200:
             status = "UP"
         else:
@@ -53,7 +53,7 @@ def update(data, app, instance):
 def run():
     app = config.APP_NAME
     ip_address = get_ip()
-    status = check_status()
+    status = check_status(ip_address)
     port = config.PORT
     ami_id = config.AMI_ID
     instance_id = config.INSTANCE_ID
