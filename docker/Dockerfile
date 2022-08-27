@@ -72,7 +72,7 @@ EXPOSE 8000
 VOLUME /var/lib/dolphin/files
 
 ENTRYPOINT ["dolphin"]
-CMD ["server", "start", "dolphin.main:app", "--host=0.0.0.0"]
+CMD ["server", "start"]
 
 ARG SOURCE_COMMIT
 LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
