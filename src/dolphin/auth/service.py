@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -8,6 +7,7 @@ from jose import JWTError, jwt
 from jose.exceptions import JWKError
 
 from dolphin.config import DOLPHIN_JWT_SECRET
+from dolphin import log
 
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
@@ -15,26 +15,28 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from .models import User, UserRegister, UserUpdate
 
 
-log = logging.getLogger(__name__)
-
 InvalidCredentialException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials"
 )
 
 
 def get(*, db_session, user_id: int) -> Optional[User]:
+    log.debug("Getting user by id: {}".format(user_id))
     return db_session.query(User).filter(User.id == user_id).one_or_none()
 
 
 def get_by_email(*, db_session, email: str) -> Optional[User]:
+    log.debug("Getting user by email: {}".format(email))
     return db_session.query(User).filter(User.email == email).one_or_none()
 
 
 def get_by_username(*, db_session, username: str) -> Optional[User]:
+    log.debug("Getting user by username: {}".format(username))
     return db_session.query(User).filter(User.username == username).one_or_none()
 
 
 def create(*, db_session, user_in: UserRegister) -> User:
+    log.debug("Creating user: {}".format(user_in.username))
     password = bytes(user_in.password, "utf-8")
 
     user = User(**user_in.dict(exclude={"password"}), password=password)
@@ -45,6 +47,7 @@ def create(*, db_session, user_in: UserRegister) -> User:
 
 
 def update(*, db_session, user: User, user_in: UserUpdate) -> User:
+    log.debug("Updating user: {}".format(user.username))
     user_data = user.dict()
 
     update_data = user_in.dict(exclude={"password"}, skip_defaults=True)
@@ -61,6 +64,7 @@ def update(*, db_session, user: User, user_in: UserUpdate) -> User:
 
 
 def get_current_user(request: Request) -> User:
+    log.debug("Getting current user")
     username = _get_current_user(request)
 
     if not username:

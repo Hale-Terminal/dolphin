@@ -10,3 +10,6 @@ tabulate==0.8.10
 uvicorn==0.18.2
 validators==0.18.2
 pymysql
+influxdb
+python-logging-loki
+psutil

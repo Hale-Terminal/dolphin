@@ -1,9 +1,11 @@
 import logging
 import os
+from time import sleep
 
 import click
 import uvicorn
 from dolphin import __version__
+from dolphin import config
 
 
 log = logging.getLogger(__name__)
@@ -12,9 +14,16 @@ log = logging.getLogger(__name__)
 @click.group()
 @click.version_option(version=__version__)
 def dolphin_cli():
-    from .logging import configure_logging
+    pass
 
-    configure_logging()
+
+@dolphin_cli.command("monitor")
+def monitor_start():
+    from dolphin.services.monitor import run
+
+    while True:
+        run()
+        sleep(config.MONITOR_WAIT_TIME)
 
 
 @dolphin_cli.group("server")
@@ -63,7 +72,9 @@ def run_server(log_level):
     uvicorn.run("dolphin.main:app", debug=True, log_level=log_level)
 
 
-dolphin_server.add_command(uvicorn.main, name="start")
+@dolphin_server.command("start")
+def server_start():
+    uvicorn.run("dolphin.main:app", host="0.0.0.0")
 
 
 def entrypoint():

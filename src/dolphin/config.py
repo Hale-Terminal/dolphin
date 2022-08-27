@@ -47,3 +47,34 @@ DATABASE_ENGINE_POOL_SIZE = config("DATABASE_ENGINE_POOL_SIZE", cast=int, defaul
 SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_HOSTNAME}:{DATABASE_PORT}/{DATABASE_NAME}"
 
 GUARDIAN_SERVERS = config("GUARDIAN_SERVERS", cast=CommaSeparatedStrings, default="")
+
+INFLUX_HOST = config("INFLUX_HOST")
+INFLUX_PORT = config("INFLUX_PORT", cast=int, default=8086)
+INFLUX_DATABASE = config("INFLUX_DATABASE")
+INFLUX_USER = config("INFLUX_USER")
+INFLUX_PASSWORD = config("INFLUX_PASSWORD")
+INFLUX_TIMEOUT = config("INFLUX_TIMEOUT", cast=int, default=5)
+INFLUX_POOL_SIZE = config("INFLUX_POOL_SIZE", cast=int, default=50)
+INFLUX_RETRY_TIME_SECONDS = config("INFLUX_RETRY_TIME_SECONDS", cast=int, default=120)
+INFLUX_SUCCESSIVE_FAILURES = config("INFLUX_SUCCESSIVE_FAILURES", cast=int, default=3)
+
+LOKI_ENABLED_1 = config("LOKI_ENABLED", default="False")
+if LOKI_ENABLED_1 == "True":
+    LOKI_ENABLED = True
+else:
+    LOKI_ENABLED = False
+LOKI_HOST = config("LOKI_HOST", default="localhost")
+LOKI_PORT = config("LOKI_PORT", cast=int, default=3100)
+LOKI_URL = f"http://{LOKI_HOST}:{LOKI_PORT}/loki/api/v1/push"
+LOKI_VERSION = config("LOKI_VERSION", default="1")
+LOKI_LOG_LEVEL = config("LOKI_LOG_LEVEL", default="INFO")
+
+APP_NAME = config("APP_NAME", default="")
+AMI_ID = config("AMI_ID", default="")
+INSTANCE_ID = config("INSTANCE_ID", default="")
+AVAILABILITY_ZONE = config("AVAILABILITY_ZONE", default="")
+INSTANCE_TYPE = config("INSTANCE_TYPE", default="")
+PORT = config("PORT", cast=int, default=0)
+
+COSMOS_SERVER = config("COSMOS_SERVER", default="")
+MONITOR_WAIT_TIME = config("MONITOR_WAIT_TIME", cast=int, default=20)

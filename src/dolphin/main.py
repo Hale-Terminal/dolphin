@@ -1,5 +1,4 @@
 import time
-import logging
 from uuid import uuid1
 from contextvars import ContextVar
 from typing import Final, Optional
@@ -18,12 +17,15 @@ from sqlalchemy.orm import scoped_session
 
 from .api import api_router
 from .database.core import engine, sessionmaker
-from .metrics import provider as metric_provider
-from .common.utils.cli import install_plugins
 from .extensions import configure_extensions
+from .logging import log
+
+from dolphin.metrics import EventLogging, APIEvent
+
+from dolphin.temp import client_event
 
 
-log = logging.getLogger(__name__)
+eventlogger = EventLogging()
 
 
 configure_extensions()
@@ -71,6 +73,8 @@ def get_path_template(request: Request) -> str:
 
 @api.middleware("http")
 async def db_session_middleware(request: Request, call_next):
+    # data = await request.json()
+    # print(data)
     request_id = str(uuid1())
 
     ctx_token = _request_id_ctx_var.set(request_id)
@@ -91,21 +95,45 @@ async def db_session_middleware(request: Request, call_next):
 class MetricsMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         path_template = get_path_template(request)
-
         method = request.method
-        tags = {"method": method, "endpoint": path_template}
+        client_ip = request.client.host
+
+        client_event(client_ip)
 
         try:
             start = time.perf_counter()
             response = await call_next(request)
             elapsed_time = time.perf_counter() - start
         except Exception as e:
-            metric_provider.counter("server.call.exception.counter", tags=tags)
+            try:
+                eventlogger.save_event(
+                    APIEvent(
+                        method=method,
+                        endpoint=path_template,
+                        response_time=None,
+                        status_code=None,
+                        status="error",
+                        client_ip=client_ip,
+                        event_type="api_event",
+                    )
+                )
+            except Exception:
+                log.error("Failed to save influx event", exc_info=True)
             raise e from None
         else:
-            tags.update({"status_code": response.status_code})
-            metric_provider.timer("server.call.elapsed", value=elapsed_time, tags=tags)
-            metric_provider.counter("server.call.counter", tags=tags)
+            try:
+                api_event = APIEvent(
+                    method=method,
+                    endpoint=path_template,
+                    response_time=elapsed_time,
+                    status_code=response.status_code,
+                    status="success",
+                    client_ip=client_ip,
+                    event_type="api_event",
+                )
+                eventlogger.save_event(api_event)
+            except Exception:
+                log.error("Failed to save influx event", exc_info=True)
 
         return response
 
@@ -134,13 +162,13 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 api.add_middleware(SentryMiddleware)
 
 
-# api.add_middleware(MetricsMiddleware)
+api.add_middleware(MetricsMiddleware)
 
 
-api.add_middleware(ExceptionMiddleware)
+# api.add_middleware(ExceptionMiddleware)
 
 
-install_plugins()
+# install_plugins()
 
 
 api.include_router(api_router)

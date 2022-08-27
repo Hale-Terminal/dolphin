@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends
 
 from dolphin.auth.service import get_current_user
 from dolphin.auth.views import auth_router, user_router
+from dolphin.equity.views import router as equity_router
+from dolphin.search.views import router as search_router
 
 
 api_router = APIRouter()
@@ -11,6 +13,9 @@ authenticated_api_router = APIRouter()
 
 
 authenticated_api_router.include_router(user_router, prefix="/users", tags=["users"])
+
+authenticated_api_router.include_router(equity_router, prefix="/equity", tags=["equity"])
+authenticated_api_router.include_router(search_router, prefix="/search", tags=["search"])
 
 
 api_router.include_router(auth_router, prefix="/auth", tags=["auth"])

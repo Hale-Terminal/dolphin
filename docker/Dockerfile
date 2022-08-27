@@ -1,15 +1,17 @@
 FROM python:3.9.7-slim-buster as sdist
 
-# Get and set up Node for front-end asset building
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Needed for fetching stuff
-    ca-certificates \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+LABEL maintainer="develop@hale-terminal.com"
+LABEL org.opencontainers.image.title="Dolphin PyPI Wheel"
+LABEL org.opencontainers.image.description="PyPI Wheel Builder for Dolphin"
+LABEL org.opencontainers.image.url="https://dolphin.io/"
+LABEL org.opencontainers.image.source="https://github.com/hale-terminal/dolphin"
+LABEL org.opencontainers.image.vendor="Hale Terminal, LLC"
+LABEL org.opencontainers.image.authors="develop@hale-terminal.com"
 
 ARG SOURCE_COMMIT
-ENV DOLPHIN_BUILD=${SOURCE_COMMIT:-unknown}
+ENV COSMOS_BUILD=${SOURCE_COMMIT:-unknown}
 LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
+LABEL org.opencontainers.image.licenses="https://github.com/hale-terminal/cosmos/blob/${SOURCE_COMMIT:-master}/LICENSE"
 
 ARG DOLPHIN_LIGHT_BUILD
 ENV DOLPHIN_LIGHT_BUILD=${DOLPHIN_LIGHT_BUILD}
@@ -26,8 +28,17 @@ RUN export YARN_CACHE_FOLDER="$(mktemp -d)" \
 # This is the image to be run
 FROM python:3.9.7-slim-buster
 
+LABEL maintainer="develop@hale-terminal.com"
+LABEL org.opencontainers.image.title="Dolphin PyPI Wheel"
+LABEL org.opencontainers.image.description="PyPI Wheel Builder for Dolphin"
+LABEL org.opencontainers.image.url="https://dolphin.io/"
+LABEL org.opencontainers.image.source="https://github.com/hale-terminal/dolphin"
+LABEL org.opencontainers.image.vendor="Hale Terminal, LLC"
+LABEL org.opencontainers.image.authors="develop@hale-terminal.com"
+
+
 # add our user and group first to make sure their IDs get assigned consistently
-RUN groupadd -r dispatch && useradd -r -m -g dolphin dolphin
+RUN groupadd -r dolphin && useradd -r -m -g dolphin dolphin
 
 # Sane defaults for pip
 ENV PIP_NO_CACHE_DIR=off \
@@ -54,7 +65,6 @@ RUN set -x \
     # These are also installed last as they are needed
     # during container run and can have the same deps w/
     && apt-get install -y --no-install-recommends \
-    pkg-config \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
