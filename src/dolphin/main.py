@@ -118,16 +118,17 @@ class MetricsMiddleware(BaseHTTPMiddleware):
             raise e from None
         else:
             try:
-                api_event = APIEvent(
-                    method=method,
-                    endpoint=path_template,
-                    response_time=elapsed_time,
-                    status_code=response.status_code,
-                    status="success",
-                    client_ip=client_ip,
-                    event_type="api_event",
-                )
-                eventlogger.save_event(api_event)
+                if path_template != "api.v1.healthcheck":
+                    api_event = APIEvent(
+                        method=method,
+                        endpoint=path_template,
+                        response_time=elapsed_time,
+                        status_code=response.status_code,
+                        status="success",
+                        client_ip=client_ip,
+                        event_type="api_event",
+                    )
+                    eventlogger.save_event(api_event)
             except Exception:
                 log.error("Failed to save influx event", exc_info=True)
 
