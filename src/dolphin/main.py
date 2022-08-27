@@ -17,7 +17,6 @@ from sqlalchemy.orm import scoped_session
 
 from .api import api_router
 from .database.core import engine, sessionmaker
-from .extensions import configure_extensions
 from .logging import log
 
 from dolphin.metrics import EventLogging, APIEvent
@@ -26,9 +25,6 @@ from dolphin.temp import client_event
 
 
 eventlogger = EventLogging()
-
-
-configure_extensions()
 
 
 async def not_found(request, exc):
