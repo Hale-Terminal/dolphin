@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import time
 from uuid import uuid1
 from contextvars import ContextVar
@@ -18,13 +19,7 @@ from sqlalchemy.orm import scoped_session
 from .api import api_router
 from .database.core import engine, sessionmaker
 from .logging import log
-
-from dolphin.metrics import EventLogging, APIEvent
-
-from dolphin.temp import client_event
-
-
-eventlogger = EventLogging()
+from dolphin import config
 
 
 async def not_found(request, exc):
@@ -94,9 +89,6 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         method = request.method
         client_ip = request.client.host
 
-        if path_template != "api.v1.healthcheck":
-            client_event(client_ip)
-
         try:
             start = time.perf_counter()
             response = await call_next(request)
@@ -159,8 +151,10 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 
 api.add_middleware(SentryMiddleware)
 
-
-#api.add_middleware(MetricsMiddleware)
+if config.INFLUX_ENABLED:
+    from dolphin.metrics import EventLogging, APIEvent
+    eventlogger = EventLogging()
+    api.add_middleware(MetricsMiddleware)
 
 
 # api.add_middleware(ExceptionMiddleware)

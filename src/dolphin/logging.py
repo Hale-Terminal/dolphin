@@ -26,19 +26,6 @@ def get_configured_logger(name: Text = None, format: Text = None) -> logging.Log
     log = logging.getLogger(name or __name__)
     log.setLevel(config.LOG_LEVEL)
 
-    if config.LOKI_ENABLED:
-        logging_loki.emitter.LokiEmitter.level_tag = "level"
-        loki_handler = logging_loki.LokiHandler(
-            url=config.LOKI_URL,
-            tags={
-                "App": "Dolphin-dev",
-                "Environment": "Development",
-                "instance_id": "i-0bb52f76e6ee71e7c",
-            },
-            version=config.LOKI_VERSION,
-        )
-        log.addHandler(loki_handler)
-
     formatter = logging.Formatter(format or default_format)
 
     general_handler = logging.StreamHandler(sys.stdout)

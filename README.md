@@ -3,46 +3,30 @@ Dolphin
 Dolphin is the container/runtime for the public facing API for the Hale Terminal.
 
 
-Environment Variables
---------
+# Installation
+
+## Requirements
+
++ Docker
++ Docker Compose
++ Python 3
+
+## Installing Dolphin Server
+
+To install Dolphin from the repository, clone the repository locally:
 
 ```
-LOG_LEVEL DEFAULT WARNING
-DOLPHIN_JWT_SECRET DEFAULT NONE
-DOLPHIN_JWT_ALG DEFAULT HS256
-DOLPHIN_JWT_EXP DEFAULT 86400
-
-SENTRY_DSN DEFAULT ""
-
-DATABASE_HOSTNAME
-DATABASE_USERNAME
-DATABASE_PASSWORD
-DATABASE_NAME
-DATABASE_PORT DEFAULT 3306
-DATABASE_ENGINE_POOL_SIZE DEFAULT 20
-
-INFLUX_ENABLED INT DEFAULT 0
-INFLUX_HOST
-INFLUX_PORT INT DEFAULT 8086
-INFLUX_DATABASE
-INFLUX_USER
-INFLUX_PASSWORD
-INFLUX_TIMEOUT INT DEFAULT 5
-INFLUX_POOL_SIZE INT DEFAULT 50
-INFLUX_RETRY_TIME_SECONDS INT DEFAULT 120
-INFLUX_SUCCESSIVE_FAILURES INT DEFAULT 3
+git clone https://github.com/Hale-Terminal/dolphin-install.git
 ```
 
-
-Building
---------
-
-To run the program from the command line run:
+To configure the Dolphin instace, run the configuration script:
 
 ```
-python3/bin/run.py
+python3 configure.py
 ```
 
-Documentation
---------
-Please see wiki for detailed documentation.
+To start, run the install script:
+
+```
+./install.sh
+```
