@@ -1,13 +1,48 @@
 Dolphin
 ======
-Build
-
 Dolphin is the container/runtime for the public facing API for the Hale Terminal.
+
+
+Environment Variables
+--------
+
+```
+LOG_LEVEL DEFAULT WARNING
+DOLPHIN_JWT_SECRET DEFAULT NONE
+DOLPHIN_JWT_ALG DEFAULT HS256
+DOLPHIN_JWT_EXP DEFAULT 86400
+
+SENTRY_DSN DEFAULT ""
+
+DATABASE_HOSTNAME
+DATABASE_USERNAME
+DATABASE_PASSWORD
+DATABASE_NAME
+DATABASE_PORT DEFAULT 3306
+DATABASE_ENGINE_POOL_SIZE DEFAULT 20
+
+INFLUX_ENABLED INT DEFAULT 0
+INFLUX_HOST
+INFLUX_PORT INT DEFAULT 8086
+INFLUX_DATABASE
+INFLUX_USER
+INFLUX_PASSWORD
+INFLUX_TIMEOUT INT DEFAULT 5
+INFLUX_POOL_SIZE INT DEFAULT 50
+INFLUX_RETRY_TIME_SECONDS INT DEFAULT 120
+INFLUX_SUCCESSIVE_FAILURES INT DEFAULT 3
+```
+
 
 Building
 --------
-Boop.
 
-Documentation 
+To run the program from the command line run:
+
+```
+python3/bin/run.py
+```
+
+Documentation
 --------
-Please see wiki for detailed documentation. 
+Please see wiki for detailed documentation.

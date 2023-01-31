@@ -160,7 +160,7 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
 api.add_middleware(SentryMiddleware)
 
 
-api.add_middleware(MetricsMiddleware)
+#api.add_middleware(MetricsMiddleware)
 
 
 # api.add_middleware(ExceptionMiddleware)

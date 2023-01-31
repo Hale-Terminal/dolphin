@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from dolphin.database.core import get_db
 from dolphin.models import PrimaryKey
+from dolphin.database.service import search_filter_sort_paginate
 
 from .models import (
     User,
@@ -23,8 +24,29 @@ user_router = APIRouter()
 
 
 @user_router.get("", response_model=UserPagination)
-def get_users():
-    pass
+def get_users(db_session: Session = Depends(get_db)):
+    items = search_filter_sort_paginate(db_session=db_session, model="User")
+
+    return {
+        "total": items["total"],
+        "items": [
+            {
+                "id": u.id,
+                "email": u.email,
+                "first_name": u.first_name,
+                "middle_name": u.middle_name,
+                "last_name": u.last_name,
+                "gender": u.gender,
+                "birthday": u.birthday,
+                "company": u.company,
+                "title": u.title,
+                "phone_number": u.phone_number,
+                "active": u.active,
+                "role": u.role
+            }
+            for u in items["items"]
+        ],
+    }
 
 
 @user_router.get("/{user_id}", response_model=UserRead)

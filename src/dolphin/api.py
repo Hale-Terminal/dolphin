@@ -21,9 +21,14 @@ authenticated_api_router.include_router(search_router, prefix="/search", tags=["
 api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 
-@api_router.get("/healthcheck", include_in_schema=False)
+@api_router.get("/health", include_in_schema=False)
 def healthcheck():
     return {"status": "ok"}
+
+
+@api_router.get("/serialnumber")
+def serial():
+    return {"serialNumber": "XXXXADKNORJ"}
 
 
 api_router.include_router(authenticated_api_router, dependencies=[Depends(get_current_user)])

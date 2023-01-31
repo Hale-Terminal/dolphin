@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 from sqlalchemy import Column, String, Integer, DateTime, func
 from pydantic import Field
 
 from dolphin.database.core import Base
-from dolphin.models import DolphinBase, TimeStampMixin
+from dolphin.models import DolphinBase, TimeStampMixin, PrimaryKey
 
 
 class Equity(Base, TimeStampMixin):
@@ -25,32 +26,6 @@ class Equity(Base, TimeStampMixin):
     website = Column(String(150))
     sector = Column(String(150))
     industry = Column(String(150))
-    date_added = Column(DateTime, default=func.utc_timestamp())
-    last_updated = Column(DateTime, default=func.utc_timestamp())
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "ticker": self.ticker,
-            "name": self.name,
-            "description": self.description,
-            "street1": self.street1,
-            "street2": self.street2,
-            "city": self.city,
-            "state": self.state,
-            "zip": self.zip,
-            "country_code": self.country_code,
-            "exchange": self.exchange,
-            "ein": self.ein,
-            "phone": self.phone,
-            "cik": self.cik,
-            "state_of_incorporation": self.state_of_incorporation,
-            "website": self.website,
-            "sector": self.sector,
-            "industry": self.industry,
-            "date_added": self.date_added.timestamp(),
-            "last_updated": self.last_updated.timestamp(),
-        }
 
 
 class EquityBase(DolphinBase):
@@ -58,22 +33,22 @@ class EquityBase(DolphinBase):
 
 
 class EquityAdd(EquityBase):
-    name: str
-    description: str
-    street1: str
-    street2: str
-    city: str
-    state: str
-    zip: str
-    country_code: str
-    exchange: str
-    ein: str
-    phone: str
-    cik: int
-    state_of_incorporation: str
-    website: str
-    sector: str
-    industry: str
+    name: Optional[str] = Field(None, nullable=True)
+    description: Optional[str] = Field(None, nullable=True)
+    street1: Optional[str] = Field(None, nullable=True)
+    street2: Optional[str] = Field(None, nullable=True)
+    city: Optional[str] = Field(None, nullable=True)
+    state: Optional[str] = Field(None, nullable=True)
+    zip: Optional[str] = Field(None, nullable=True)
+    country_code: Optional[str] = Field(None, nullable=True)
+    exchange: Optional[str] = Field(None, nullable=True)
+    ein: Optional[str] = Field(None, nullable=True)
+    phone: Optional[str] = Field(None, nullable=True)
+    cik: Optional[int] = Field(None, nullable=True)
+    state_of_incorporation: Optional[str] = Field(None, nullable=True)
+    website: Optional[str] = Field(None, nullable=True)
+    sector: Optional[str] = Field(None, nullable=True)
+    industry: Optional[str] = Field(None, nullable=True)
 
 
 class EquityAddResponse(DolphinBase):
@@ -81,20 +56,45 @@ class EquityAddResponse(DolphinBase):
 
 
 class EquityUpdate(DolphinBase):
-    ticker: str
-    name: str
-    description: str
-    street1: str
-    street2: str
-    city: str
-    state: str
-    zip: str
-    country_code: str
-    exchange: str
-    ein: str
-    phone: str
-    cik: int
-    state_of_incorporation: str
-    website: str
-    sector: str
-    industry: str
+    ticker: Optional[str] = Field(None, nullable=True)
+    name: Optional[str] = Field(None, nullable=True)
+    description: Optional[str] = Field(None, nullable=True)
+    street1: Optional[str] = Field(None, nullable=True)
+    street2: Optional[str] = Field(None, nullable=True)
+    city: Optional[str] = Field(None, nullable=True)
+    state: Optional[str] = Field(None, nullable=True)
+    zip: Optional[str] = Field(None, nullable=True)
+    country_code: Optional[str] = Field(None, nullable=True)
+    exchange: Optional[str] = Field(None, nullable=True)
+    ein: Optional[str] = Field(None, nullable=True)
+    phone: Optional[str] = Field(None, nullable=True)
+    cik: Optional[int] = Field(None, nullable=True)
+    state_of_incorporation: Optional[str] = Field(None, nullable=True)
+    website: Optional[str] = Field(None, nullable=True)
+    sector: Optional[str] = Field(None, nullable=True)
+    industry: Optional[str] = Field(None, nullable=True)
+
+
+class EquityRead(EquityBase):
+    id: PrimaryKey
+    name: Optional[str] = Field(None, nullable=True)
+    description: Optional[str] = Field(None, nullable=True)
+    street1: Optional[str] = Field(None, nullable=True)
+    street2: Optional[str] = Field(None, nullable=True)
+    city: Optional[str] = Field(None, nullable=True)
+    state: Optional[str] = Field(None, nullable=True)
+    zip: Optional[str] = Field(None, nullable=True)
+    country_code: Optional[str] = Field(None, nullable=True)
+    exchange: Optional[str] = Field(None, nullable=True)
+    ein: Optional[str] = Field(None, nullable=True)
+    phone: Optional[str] = Field(None, nullable=True)
+    cik: Optional[int] = Field(None, nullable=True)
+    state_of_incorporation: Optional[str] = Field(None, nullable=True)
+    website: Optional[str] = Field(None, nullable=True)
+    sector: Optional[str] = Field(None, nullable=True)
+    industry: Optional[str] = Field(None, nullable=True)
+
+
+class EquityPagination(DolphinBase):
+    total: int
+    items: List[EquityRead] = []

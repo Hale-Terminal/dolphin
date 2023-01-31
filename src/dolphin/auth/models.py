@@ -10,6 +10,7 @@ from sqlalchemy import Column, String, LargeBinary, Integer, Boolean, Date
 from dolphin.config import DOLPHIN_JWT_ALG, DOLPHIN_JWT_EXP, DOLPHIN_JWT_SECRET
 from dolphin.database.core import Base
 from dolphin.models import DolphinBase, TimeStampMixin, PrimaryKey
+from dolphin.enums import UserRoles
 
 
 def hash_password(password: str):
@@ -32,6 +33,15 @@ class User(Base, TimeStampMixin):
     title = Column(String)
     phone_number = Column(String)
     active = Column(Boolean, default=True)
+    role = Column(String, default=UserRoles.member)
+
+
+    # type = Column(Integer, default=1)
+
+    # Account Types
+    #
+    # 1 - Basic User
+    #
 
     # search_vector = Column(
     #    TSVectorType(
@@ -66,7 +76,7 @@ class User(Base, TimeStampMixin):
 
 
 class UserBase(DolphinBase):
-    username: str
+    username: Optional[str] = Field(None, nullable=True)
 
 
 class UserLogin(UserBase):
@@ -84,6 +94,7 @@ class UserRegister(UserLogin):
     title: Optional[str] = Field(None, nullable=True)
     phone_number: Optional[str] = Field(None, nullable=True)
     password: Optional[str] = Field(None, nullable=True)
+    role: Optional[str] = Field(None, nullable=True)
 
     @validator("password", pre=True, always=True)
     def password_required(cls, v):
@@ -100,15 +111,20 @@ class UserRegisterResponse(DolphinBase):
 
 class UserRead(UserBase):
     id: PrimaryKey
-    email: str
-    first_name: str
-    middle_name: str
-    last_name: str
-    gender: str
-    birthday: date
-    company: str
-    title: str
-    phone_number: str
+    email: Optional[str] = Field(None, nullable=True)
+    first_name: Optional[str] = Field(None, nullable=True)
+    middle_name: Optional[str] = Field(None, nullable=True)
+    last_name: Optional[str] = Field(None, nullable=True)
+    gender: Optional[str] = Field(None, nullable=True)
+    birthday: Optional[date] = Field(None, nullable=True)
+    company: Optional[str] = Field(None, nullable=True)
+    title: Optional[str] = Field(None, nullable=True)
+    phone_number: Optional[str] = Field(None, nullable=True)
+    password: Optional[str] = Field(None, nullable=True)
+    active: Optional[bool] = Field(None, nullable=True)
+    role: Optional[str] = Field(None, nullable=True)
+    created_at: Optional[datetime] = Field(None, nullable=True)
+    updated_at: Optional[datetime] = Field(None, nullable=True)
 
 
 class UserUpdate(DolphinBase):
@@ -123,6 +139,8 @@ class UserUpdate(DolphinBase):
     title: Optional[str] = Field(None, nullable=True)
     phone_number: Optional[str] = Field(None, nullable=True)
     password: Optional[str] = Field(None, nullable=True)
+    active: Optional[bool] = Field(None, nullable=True)
+    role: Optional[str] = Field(None, nullable=True)
 
     @validator("password", pre=True)
     def hash(cls, v):

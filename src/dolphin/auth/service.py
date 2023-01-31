@@ -8,6 +8,7 @@ from jose.exceptions import JWKError
 
 from dolphin.config import DOLPHIN_JWT_SECRET
 from dolphin import log
+from dolphin.enums import UserRoles
 
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED

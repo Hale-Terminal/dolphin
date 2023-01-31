@@ -1,5 +1,9 @@
 import re
 import functools
+from typing import Any
+
+from pydantic.error_wrappers import ErrorWrapper, ValidationError
+from pydantic import BaseModel
 
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
@@ -96,3 +100,20 @@ def get_db(request: Request):
 
 def get_db_temp():
     return scoped_session(sessionmaker(bind=engine))
+
+
+def get_class_by_tablename(table_fullname: str) -> Any:
+
+    def _find_class(name):
+        for c in Base._decl_class_registry.values():
+            if hasattr(c, "__table__"):
+                if c.__table__.fullname.lower() == name.lower():
+                    return c
+
+    mapped_name = resolve_table_name(table_fullname)
+    mapped_class = _find_class(mapped_name)
+
+    if not mapped_class:
+        raise ValidationError()
+
+    return mapped_class

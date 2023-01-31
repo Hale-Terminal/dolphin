@@ -48,6 +48,12 @@ SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DATABASE_USERNAME}:{DATABASE_PASSWO
 
 GUARDIAN_SERVERS = config("GUARDIAN_SERVERS", cast=CommaSeparatedStrings, default="")
 
+INFLUX_ENABLED = config("INFLUX_ENABLED", cast=int, default=0)
+if INFLUX_ENABLED == 0:
+    INFLUX_ENABLED = False
+else:
+    INFLUX_ENABLED = True
+
 INFLUX_HOST = config("INFLUX_HOST")
 INFLUX_PORT = config("INFLUX_PORT", cast=int, default=8086)
 INFLUX_DATABASE = config("INFLUX_DATABASE")

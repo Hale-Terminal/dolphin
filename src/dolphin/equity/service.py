@@ -1,8 +1,18 @@
-from typing import Optional
+from typing import Optional, List
+
+from fastapi import HTTPException, status
 
 from dolphin import log
 
-from .models import Equity, EquityUpdate
+from starlette.requests import Request
+from starlette.status import HTTP_401_UNAUTHORIZED
+
+from .models import Equity, EquityUpdate, EquityAdd, EquityPagination
+
+
+def get_all(*, db_session) -> List[Equity]:
+    log.debug("Getting all equities")
+    return db_session.query(Equity).all()
 
 
 def get(*, db_session, equity_id: int) -> Optional[Equity]:
